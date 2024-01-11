@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Eindopdracht2.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<Eindopdracht2Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Eindopdracht2Context") ?? throw new InvalidOperationException("Connection string 'Eindopdracht2Context' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
