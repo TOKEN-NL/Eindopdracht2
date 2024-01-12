@@ -6,7 +6,7 @@ namespace Eindopdracht2.Controllers
 {
     public class PlayController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Player()
         {
             return View();
         }
@@ -25,8 +25,7 @@ namespace Eindopdracht2.Controllers
             {
                 return NotFound();
             }
-
-            // Implementeer logica om het nummer af te spelen
+            // ToDo: logica nummer afspelen
             return View(song);
         }
 
@@ -41,8 +40,20 @@ namespace Eindopdracht2.Controllers
                 return NotFound();
             }
 
-            // Implementeer logica om de afspeellijst af te spelen
-            return View(playlist);
+            // ToDo: logica afspeellijst afspelen
+            
+            return View();
+        }
+        [HttpGet]
+        public IActionResult GetSongDuration(string title)
+        {
+            var song = _dbContext.Songs.FirstOrDefault(s => s.Title == title);
+            if (song != null)
+            {
+                return Ok(song.DurationInSeconds);
+            }
+
+            return NotFound("Nummer niet gevonden.");
         }
     }
 }

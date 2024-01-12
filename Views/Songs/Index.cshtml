@@ -9,6 +9,12 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    <label for="searchTerm">Search:</label>
+    <input type="text" name="searchTerm" id="searchTerm" />
+    <button type="submit">Search</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -33,6 +39,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                <a href="javascript:void(0);" onclick="playSong('@item.Title')">Afspelen</a>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>

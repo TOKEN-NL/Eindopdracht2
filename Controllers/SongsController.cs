@@ -20,11 +20,51 @@ namespace Eindopdracht2.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
-              return _context.Songs != null ? 
-                          View(await _context.Songs.ToListAsync()) :
-                          Problem("Entity set 'Eindopdracht2Context.Songs'  is null.");
+            if (_context.Songs == null)
+            {
+                return Problem("Entity set 'Eindopdracht2Context.Songs' is null.");
+            }
+
+            // Fetch alle songs uit de database
+            var allSongs = await _context.Songs.ToListAsync();
+
+            // Als searchTerm leeg is, toon alle nummers
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return View(allSongs);
+            }
+
+            // Anders, voer client-side filtering uit
+            var matchingSongs = allSongs
+                .Where(song => song.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                               song.Artist.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                               song.Genre.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return View(matchingSongs);
+        }
+        public async Task<IActionResult> Search(string searchTerm)
+        {
+
+            if (_context.Songs == null)
+            {
+                return Problem("Entity set 'Eindopdracht2Context.Songs' is null.");
+            }
+
+            // Ensure searchTerm is not null
+            searchTerm ??= string.Empty;
+
+            // Fetch all songs from the database
+            var allSongs = await _context.Songs.ToListAsync();
+
+            // Perform client-side filtering
+            var matchingSongs = allSongs
+                .Where(song => song.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return View("Index", matchingSongs);
         }
 
         // GET: Songs/Details/5
@@ -88,7 +128,7 @@ namespace Eindopdracht2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Artist,Genre,ReleaseDate,DurationInSeconds")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Artist,Genre,ReleaseDate,DurationInSeconds,URL")] Song song)
         {
             if (id != song.Id)
             {
@@ -159,5 +199,8 @@ namespace Eindopdracht2.Controllers
         {
           return (_context.Songs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+      
+        
+
     }
 }

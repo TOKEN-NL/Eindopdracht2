@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Play";
+}
+
+<div id="timerPlayer">
+    <div class="timer" id="timerDisplay">00:00</div>
+    <div id="playerControls">
+        <button onclick="previousTrack()">Vorige</button>
+        <button onclick="togglePlayPause()">Afspelen/Pauzeren</button>
+        <button onclick="nextTrack()">Volgende</button>
+    </div>
+    <div id="trackInfo">
+        <span id="trackTitle"></span>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function saveToLocalStorage(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        function getFromLocalStorage(key) {
+            const value = localStorage.getItem(key);
+            return value ? JSON.parse(value) : null;
+        }
+
+        var durationInSeconds = getFromLocalStorage('durationInSeconds') || 0; 
+        var timerDisplay = document.getElementById('timerDisplay');
+        var trackTitle = document.getElementById('trackTitle');
+        var playPauseButton = document.getElementById('playPauseButton');
+        var timerInterval;
+
+        function updateTimerDisplay() {
+            var minutes = Math.floor(durationInSeconds / 60);
+            var seconds = durationInSeconds % 60;
+
+            var formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            var formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerDisplay.textContent = formattedMinutes + ':' + formattedSeconds;
+        }
+
+        function updateTrackInfo(title) {
+            trackTitle.textContent = title || '';
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(function () {
+                durationInSeconds--;
+
+                if (durationInSeconds < 0) {
+                    clearInterval(timerInterval);
+                    alert('Timer is afgelopen!');
+                } else {
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function togglePlayPause() {
+            // ToDo: logica afspelen/pauzeren in te schakelen
+
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            } else {
+                startTimer();
+            }
+        }
+
+        function previousTrack() {
+            // ToDo: logica vorige nummer 
+        }
+
+        function nextTrack() {
+            // ToDo:logica volgende nummer 
+        }
+
+        startTimer();
+
+        window.addEventListener('beforeunload', function () {
+            saveToLocalStorage('durationInSeconds', durationInSeconds);
+        });
+        
+    });
+</script>
