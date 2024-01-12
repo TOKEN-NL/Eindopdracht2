@@ -29,21 +29,7 @@ namespace Eindopdracht2.Controllers
             return View(song);
         }
 
-        public IActionResult PlayAlbum(int playlistId)
-        {
-            var playlist = _dbContext.Albums
-                .Include(p => p.Songs) 
-                .FirstOrDefault(p => p.Id == playlistId);
-
-            if (playlist == null)
-            {
-                return NotFound();
-            }
-
-            // ToDo: logica afspeellijst afspelen
-            
-            return View();
-        }
+       
         [HttpGet]
         public IActionResult GetSongDuration(string title)
         {
