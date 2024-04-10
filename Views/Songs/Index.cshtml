@@ -39,9 +39,11 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                <a href="javascript:void(0);" onclick="playSong('@item.Title')">Afspelen</a>
-            </td>
+                <td>
+                    
+
+                    <a href="javascript:void(0);" onclick="playSong('@item.Title','@item.DurationInSeconds')" data-title="@item.Title" data-duration="@item.DurationInSeconds">Afspelen</a>
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>

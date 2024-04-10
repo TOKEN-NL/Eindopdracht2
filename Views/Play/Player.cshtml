@@ -2,44 +2,51 @@
     ViewData["Title"] = "Play";
 }
 
-<div id="timerPlayer">
-    <div class="timer" id="timerDisplay">00:00</div>
+<div id="player">
+    <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
     <div id="playerControls">
         <button onclick="previousTrack()">Vorige</button>
-        <button onclick="togglePlayPause()">Afspelen/Pauzeren</button>
+        <button id="playPauseButton" onclick="togglePlayPause()">Afspelen/Pauzeren</button>
         <button onclick="nextTrack()">Volgende</button>
     </div>
     <div id="trackInfo">
-        <span id="trackTitle"></span>
+        <span id="trackTitle"></span> - <span id="trackTime">00:00</span>
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        function saveToLocalStorage(key, value) {
-            localStorage.setItem(key, JSON.stringify(value));
-        }
-
-        function getFromLocalStorage(key) {
-            const value = localStorage.getItem(key);
-            return value ? JSON.parse(value) : null;
-        }
-
-        var durationInSeconds = getFromLocalStorage('durationInSeconds') || 0; 
-        var timerDisplay = document.getElementById('timerDisplay');
+        var currentTrackIndex = 0; // Assuming you have an array of tracks
+        var tracks = []; // Initialize empty tracks array
+        var progressBar = document.getElementById('progressBar');
+        var timerDisplay = document.getElementById('trackTime');
         var trackTitle = document.getElementById('trackTitle');
         var playPauseButton = document.getElementById('playPauseButton');
         var timerInterval;
 
+        // Function to add a song to the tracks array
+        function addSongToTracks(title, duration) {
+            tracks.push({
+                title: title,
+                duration: duration
+            });
+        }
+
         function updateTimerDisplay() {
-            var minutes = Math.floor(durationInSeconds / 60);
-            var seconds = durationInSeconds % 60;
+            var currentTime = timerInterval ? (Date.now() - startTime) / 1000 : 0;
+            var duration = tracks[currentTrackIndex].duration;
+            var minutes = Math.floor(currentTime / 60);
+            var seconds = Math.floor(currentTime % 60);
 
             var formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
             var formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
 
             timerDisplay.textContent = formattedMinutes + ':' + formattedSeconds;
+
+            var progress = (currentTime / duration) * 100;
+            progressBar.style.width = progress + '%';
         }
 
         function updateTrackInfo(title) {
@@ -47,43 +54,61 @@
         }
 
         function startTimer() {
+            startTime = Date.now();
             updateTimerDisplay();
-            timerInterval = setInterval(function () {
-                durationInSeconds--;
-
-                if (durationInSeconds < 0) {
-                    clearInterval(timerInterval);
-                    alert('Timer is afgelopen!');
-                } else {
-                    updateTimerDisplay();
-                }
-            }, 1000);
+            timerInterval = setInterval(updateTimerDisplay, 1000);
         }
 
         function togglePlayPause() {
-            // ToDo: logica afspelen/pauzeren in te schakelen
-
             if (timerInterval) {
                 clearInterval(timerInterval);
                 timerInterval = null;
+                playPauseButton.textContent = 'Afspelen';
             } else {
-                startTimer();
+                if (tracks.length > 0) {
+                    startTimer();
+                    playPauseButton.textContent = 'Pauzeren';
+                }
             }
         }
 
         function previousTrack() {
-            // ToDo: logica vorige nummer 
+            if (tracks.length > 0) {
+                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                loadTrack(tracks[currentTrackIndex]);
+            }
         }
 
         function nextTrack() {
-            // ToDo:logica volgende nummer 
+            if (tracks.length > 0) {
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+                loadTrack(tracks[currentTrackIndex]);
+            }
         }
 
-        startTimer();
+        function loadTrack(track) {
+            if (track) {
+                updateTrackInfo(track.title);
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimerDisplay, 1000);
+            }
+        }
+        // Function to handle the button click for adding a song
+        function playSong(title, duration) {
+            // Add the song to the tracks array
+            addSongToTracks(title, duration);
+
+            // You can optionally display a message or update UI to indicate adding the song
+            console.log("Song added to tracks:", title);
+        }
+
+        // Load the first track by default (if any)
+        if (tracks.length > 0) {
+            loadTrack(tracks[currentTrackIndex]);
+        }
 
         window.addEventListener('beforeunload', function () {
-            saveToLocalStorage('durationInSeconds', durationInSeconds);
+            // Functionality not needed for this example
         });
-        
     });
 </script>

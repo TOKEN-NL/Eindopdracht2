@@ -2,6 +2,7 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
+    position:absolute
   white-space: normal;
   text-align: center;
   word-break: break-all;
@@ -39,10 +40,12 @@ button.accept-policy {
   line-height: inherit;
 }
 
-.footer {
-  position: absolute;
+
+footer {
+  position: sticky;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
+  background-color: white;
 }

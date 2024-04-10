@@ -18,7 +18,7 @@ namespace Eindopdracht2.Controllers
         {
             _context = context;
         }
-
+        
         // GET: Songs
         public async Task<IActionResult> Index(string searchTerm)
         {
@@ -128,7 +128,7 @@ namespace Eindopdracht2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Artist,Genre,ReleaseDate,DurationInSeconds,URL")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Artist,Genre,ReleaseDate,DurationInSeconds")] Song song)
         {
             if (id != song.Id)
             {
@@ -199,8 +199,13 @@ namespace Eindopdracht2.Controllers
         {
           return (_context.Songs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-      
-        
-
+        public ActionResult Play(string title, int durationInSeconds)
+        {
+            addSongToTracks()
+            // ... code om het nummer af te spelen met de titel en duur ...
+        }
     }
+
+
+}
 }
