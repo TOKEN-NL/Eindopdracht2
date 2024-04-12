@@ -18,7 +18,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var currentTrackIndex = 0; // Assuming you have an array of tracks
+        var currentTrackIndex = 0; 
         var tracks = []; // Initialize empty tracks array
         var progressBar = document.getElementById('progressBar');
         var timerDisplay = document.getElementById('trackTime');
@@ -60,6 +60,8 @@
         }
 
         function togglePlayPause() {
+            isPlaying = !isPlaying;
+            savePlayerState(currentTrackIndex, isPlaying);
             if (timerInterval) {
                 clearInterval(timerInterval);
                 timerInterval = null;
@@ -98,7 +100,6 @@
             // Add the song to the tracks array
             addSongToTracks(title, duration);
 
-            // You can optionally display a message or update UI to indicate adding the song
             console.log("Song added to tracks:", title);
         }
 
@@ -108,7 +109,6 @@
         }
 
         window.addEventListener('beforeunload', function () {
-            // Functionality not needed for this example
         });
     });
 </script>

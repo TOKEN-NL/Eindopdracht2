@@ -199,13 +199,9 @@ namespace Eindopdracht2.Controllers
         {
           return (_context.Songs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        public ActionResult Play(string title, int durationInSeconds)
-        {
-            addSongToTracks()
-            // ... code om het nummer af te spelen met de titel en duur ...
-        }
+       
     }
 
 
 }
-}
+

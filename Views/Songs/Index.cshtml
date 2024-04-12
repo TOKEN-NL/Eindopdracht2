@@ -68,3 +68,28 @@
 }
     </tbody>
 </table>
+<script>
+    function playSong(title, duration) {
+   
+        var playerControls = document.getElementById('playerControls');
+        var playPauseButton = playerControls.querySelector('#playPauseButton');
+        var trackTitle = document.getElementById('trackTitle');
+        var progressBar = document.getElementById('progressBar');
+        var timerDisplay = document.getElementById('trackTime');
+
+        // Update de titel van het nummer in de audioplayer
+        trackTitle.textContent = title;
+
+        // Update de duur van het nummer in de audioplayer
+        var minutes = Math.floor(duration / 60);
+        var seconds = duration % 60;
+        var formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+        timerDisplay.textContent = minutes + ':' + formattedSeconds;
+
+        // Reset de voortgangsbalk
+        progressBar.style.width = '0%';
+
+        
+    }
+
+</script>
