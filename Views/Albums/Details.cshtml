@@ -31,6 +31,25 @@
     </dl>
 </div>
 <div>
+    <h4>Songs</h4>
+    <hr />
+    <ul>
+        @if (Model.AlbumSongs != null)
+        {
+            foreach (var albumSong in Model.AlbumSongs)
+            {
+                <li>@albumSong.Song.Title</li>
+            }
+        }
+        else
+        {
+            <li>No songs found</li>
+        }
+    </ul>
+</div>
+
+
+<div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
